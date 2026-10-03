@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    {% if lang == 'en' %}Order Successful
+    {% elif lang == 'th' %}สั่งซื้อสำเร็จ
+    {% else %}Comandă Reușită
+    {% endif %} - Phunket
+  </title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&display=swap" rel="stylesheet">
+
+  <!-- Librărie Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      text-align: center;
+      background-color: #f9f9f9;
+      color: #333;
+      padding: 80px 20px;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* --- GLOB INTERACTIV PENTRU LIMBĂ --- */
+    .lang-switcher {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .globe-icon {
+      font-size: 1.8rem;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      perspective: 1000px;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+    }
+
+    .globe-emoji {
+      display: inline-block;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .lang-switcher:hover .globe-emoji {
+      transform: rotateY(-360deg);
+    }
+
+    .lang-switcher:hover .globe-icon {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      transform: translateY(-2px);
+    }
+
+    .lang-dropdown {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+      width: 160px;
+    }
+
+    .lang-switcher:hover .lang-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .lang-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 800;
+      font-size: 0.95rem;
+      transition: background 0.2s ease;
+    }
+
+    .lang-dropdown a:hover {
+      background: #f4f4f4;
+    }
+
+    /* --- CARD DE SUCCES --- */
+    .card {
+      background: #ffffff;
+      max-width: 550px;
+      width: 100%;
+      padding: 50px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    }
+
+    .icon-circle {
+      width: 80px;
+      height: 80px;
+      background: #e8f5e9;
+      color: #2e7d32;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin: 0 auto 20px auto;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    h1 {
+      color: #2e7d32;
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 1.15rem;
+      color: #555;
+      margin-bottom: 35px;
+      line-height: 1.6;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background: #000000;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 15px 35px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 1rem;
+      text-transform: uppercase;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: #333333;
+      transform: translateY(-2px);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Selector Limbi -->
+  <div class="lang-switcher">
+    <div class="globe-icon"><span class="globe-emoji">🌐</span></div>
+    <div class="lang-dropdown">
+      <a href="/set_lang/ro"><span>🇷🇴</span> Română</a>
+      <a href="/set_lang/en"><span>🇬🇧</span> English</a>
+      <a href="/set_lang/th"><span>🇹🇭</span> ไทย</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="icon-circle">✓</div>
+
+    <h1>
+      {% if lang == 'en' %}Order placed successfully! 🎉
+      {% elif lang == 'th' %}สั่งซื้อสำเร็จเรียบร้อยแล้ว! 🎉
+      {% else %}Comandă plasată cu succes! 🎉
+      {% endif %}
+    </h1>
+
+    <p>
+      {% if lang == 'en' %}The Phunket team has received your order. We will contact you shortly for confirmation.
+      {% elif lang == 'th' %}ทีมงาน Phunket ได้รับคำสั่งซื้อของคุณแล้ว เราจะติดต่อคุณในไม่ช้าเพื่อยืนยัน
+      {% else %}Echipa Phunket a primit comanda ta. Te vom contacta în scurt timp pentru confirmare.
+      {% endif %}
+    </p>
+
+    <a href="/" class="back-btn">
+      {% if lang == 'en' %}Back to Menu
+      {% elif lang == 'th' %}กลับสู่หน้าเมนู
+      {% else %}Întoarce-te la Meniu
+      {% endif %}
+    </a>
+  </div>
+
+  <script>
+    // Declanșare confetti la încărcarea paginii
+    document.addEventListener('DOMContentLoaded', () => {
+      const duration = 3 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+      function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+
+        // Confetti lansate din ambele părți stânga/dreapta jos
+        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+      }, 250);
+    });
+  </script>
+
+</body>
+</html>

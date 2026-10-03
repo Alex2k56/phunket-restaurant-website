@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ produs.nume[lang] }} - Phunket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      min-height: 100vh;
+    }
+
+    /* --- GLOB INTERACTIV PENTRU LIMBĂ --- */
+    .lang-switcher {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .globe-icon {
+      font-size: 1.8rem;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      perspective: 1000px;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+    }
+
+    .globe-emoji {
+      display: inline-block;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .lang-switcher:hover .globe-emoji {
+      transform: rotateY(360deg);
+    }
+
+    .lang-switcher:hover .globe-icon {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      transform: translateY(-2px);
+    }
+
+    .lang-dropdown {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+      width: 160px;
+    }
+
+    .lang-switcher:hover .lang-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .lang-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 800;
+      font-size: 0.95rem;
+      transition: background 0.2s ease;
+    }
+
+    .lang-dropdown a:hover {
+      background: #f4f4f4;
+    }
+
+    /* --- CONTAINER PRODUS --- */
+    .page-wrapper {
+      max-width: 650px;
+      margin: 40px auto;
+      padding: 0 20px 40px 20px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      color: #666;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 800;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: #000;
+      transform: translateX(-4px);
+    }
+
+    .product-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+      text-align: center;
+    }
+
+    .product-detail-img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      border-radius: 14px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .detail-title {
+      font-weight: 800;
+      font-size: 1.8rem;
+      margin: 0 0 15px 0;
+      line-height: 1.2;
+    }
+
+    .description {
+      font-weight: 400;
+      line-height: 1.6;
+      color: #666;
+      font-size: 1rem;
+      margin: 0 0 25px 0;
+    }
+
+    /* --- FORMULAR & SELECTOARE --- */
+    .options-group {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 14px;
+      margin-bottom: 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .option-label {
+      font-weight: 800;
+      color: #444;
+      font-size: 0.95rem;
+    }
+
+    .variant-select {
+      padding: 10px 16px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+      background-color: #ffffff;
+      color: #2e7d32;
+      font-weight: 800;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .variant-select:focus {
+      border-color: #2e7d32;
+    }
+
+    /* Contor Cantitate */
+    .quantity-counter {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .qty-btn {
+      background: none;
+      border: none;
+      width: 36px;
+      height: 36px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: #333;
+      transition: background 0.2s;
+    }
+
+    .qty-btn:hover {
+      background: #eee;
+    }
+
+    .qty-input {
+      width: 40px;
+      border: none;
+      text-align: center;
+      font-weight: 800;
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    /* Display Preț Total */
+    .price-display {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #2e7d32;
+      margin-bottom: 25px;
+    }
+
+    .buy-btn {
+      width: 100%;
+      max-width: 400px;
+      background-color: #000000;
+      color: #ffffff;
+      border: none;
+      padding: 16px 30px;
+      font-size: 1rem;
+      font-weight: 800;
+      border-radius: 30px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .buy-btn:hover {
+      background-color: #333333;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Selector Limbi -->
+  <div class="lang-switcher">
+    <div class="globe-icon">
+      <span class="globe-emoji">🌐</span>
+    </div>
+    <div class="lang-dropdown">
+      <a href="/set_lang/ro"><span>🇷🇴</span> Română</a>
+      <a href="/set_lang/en"><span>🇬🇧</span> English</a>
+      <a href="/set_lang/th"><span>🇹🇭</span> ไทย</a>
+    </div>
+  </div>
+
+  <div class="page-wrapper">
+    <!-- Buton Înapoi -->
+    <a href="/" class="back-btn">
+      {% if lang == 'en' %}← Back to menu
+      {% elif lang == 'th' %}← กลับไปยังหน้าเมนู
+      {% else %}← Înapoi la meniu
+      {% endif %}
+    </a>
+
+    <div class="product-card">
+      <img src="{{ produs.imagine }}" alt="{{ produs.nume[lang] }}" class="product-detail-img">
+      <h1 class="detail-title">{{ produs.nume[lang] }}</h1>
+
+      {% if produs.descriere and produs.descriere[lang] %}
+        <p class="description">{{ produs.descriere[lang] }}</p>
+      {% endif %}
+
+      <form action="/add_to_cart" method="POST">
+        <input type="hidden" name="produs_id" value="{{ id }}">
+
+        <div class="options-group">
+          <!-- Selectare Opțiune / Gramaj -->
+          <div class="meta-row">
+            <span class="option-label">
+              {% if lang == 'en' %}Option:
+              {% elif lang == 'th' %}ตัวเลือก:
+              {% else %}Opțiune:
+              {% endif %}
+            </span>
+            <select name="optiune" id="variantSelect" class="variant-select" onchange="updatePrice()">
+              {% for opt in produs.optiuni %}
+                <option value="{{ opt.nume if opt.nume else opt.id_opt }}" data-price="{{ opt.pret }}">
+                  {{ opt.nume if opt.nume else opt.id_opt }} ({{ opt.pret }} THB)
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Selectare Cantitate -->
+          <div class="meta-row">
+            <span class="option-label">
+              {% if lang == 'en' %}Quantity:
+              {% elif lang == 'th' %}จำนวน:
+              {% else %}Cantitate:
+              {% endif %}
+            </span>
+            <div class="quantity-counter">
+              <button type="button" class="qty-btn" onclick="changeQty(-1)">-</button>
+              <input type="number" name="cantitate" id="qtyInput" class="qty-input" value="1" min="1" readonly>
+              <button type="button" class="qty-btn" onclick="changeQty(1)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Afișare Preț Calculat Dinamic -->
+        <div class="price-display">
+          <span id="totalPrice">{{ produs.optiuni[0].pret }}</span> THB
+        </div>
+
+        <!-- Buton Adaugă în Coș -->
+        <button type="submit" class="buy-btn">
+          {{ texte.adauga if texte else 'Adaugă în coș' }}
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function updatePrice() {
+      const select = document.getElementById('variantSelect');
+      const selectedOption = select.options[select.selectedIndex];
+      const pricePerUnit = parseFloat(selectedOption.getAttribute('data-price')) || 0;
+      const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+
+      document.getElementById('totalPrice').innerText = pricePerUnit * qty;
+    }
+
+    function changeQty(delta) {
+      const qtyInput = document.getElementById('qtyInput');
+      let currentQty = parseInt(qtyInput.value) || 1;
+      currentQty += delta;
+
+      if (currentQty < 1) currentQty = 1;
+      qtyInput.value = currentQty;
+
+      updatePrice();
+    }
+  </script>
+
+</body>
+</html>

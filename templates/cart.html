@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ texte.cos if texte else 'Coșul meu' }} - Phunket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Circe', 'Outfit', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* --- GLOB INTERACTIV PENTRU LIMBĂ --- */
+    .lang-switcher {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .globe-icon {
+      font-size: 1.8rem;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      perspective: 1000px;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+    }
+
+    .globe-emoji {
+      display: inline-block;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .lang-switcher:hover .globe-emoji {
+      transform: rotateY(-360deg);
+    }
+
+    .lang-switcher:hover .globe-icon {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      transform: translateY(-2px);
+    }
+
+    .lang-dropdown {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+      width: 160px;
+    }
+
+    .lang-switcher:hover .lang-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .lang-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 800;
+      font-size: 0.95rem;
+      transition: background 0.2s ease;
+    }
+
+    .lang-dropdown a:hover {
+      background: #f4f4f4;
+    }
+
+    /* --- STILURI COȘ --- */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .cart-item {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      transition: box-shadow 0.2s ease;
+    }
+
+    .cart-item:hover {
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .item-details h3 {
+      margin: 0 0 5px 0;
+      font-weight: 800;
+    }
+
+    .item-details p {
+      margin: 0;
+      color: #666;
+    }
+
+    /* --- ZONA DE PRET SI BUTON DE STERGERE --- */
+    .item-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .item-price {
+      font-weight: 800;
+      color: #2e7d32;
+      font-size: 1.2rem;
+    }
+
+    /* Stilul pentru butonul X */
+    .remove-btn {
+      color: #aaa;
+      font-size: 1.8rem;
+      font-weight: 800;
+      text-decoration: none;
+      line-height: 1;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.1s ease;
+      user-select: none;
+      padding: 5px;
+    }
+
+    /* Se face roșu la trecerea mouse-ului sau la apăsare */
+    .remove-btn:hover,
+    .remove-btn:active {
+      color: #d32f2f;
+      transform: scale(1.15);
+    }
+
+    .total-section {
+      text-align: right;
+      margin-top: 30px;
+      font-size: 1.5rem;
+    }
+
+    .checkout-btn {
+      display: block;
+      width: 100%;
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      text-decoration: none;
+      margin-top: 20px;
+      text-transform: uppercase;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .checkout-btn:hover {
+      background-color: #333;
+      transform: translateY(-2px);
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #555;
+      font-weight: 800;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .back-link:hover {
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Selector Limbi -->
+  <div class="lang-switcher">
+    <div class="globe-icon"><span class="globe-emoji">🌐</span></div>
+    <div class="lang-dropdown">
+      <a href="/set_lang/ro"><span>🇷🇴</span> Română</a>
+      <a href="/set_lang/en"><span>🇬🇧</span> English</a>
+      <a href="/set_lang/th"><span>🇹🇭</span> ไทย</a>
+    </div>
+  </div>
+
+  <div class="header">
+    <h1>
+      {% if lang == 'en' %}Shopping Cart
+      {% elif lang == 'th' %}ตะกร้าสินค้า
+      {% else %}Coșul de cumpărături
+      {% endif %}
+    </h1>
+  </div>
+
+  {% if cosul_meu %}
+    {% for item in cosul_meu %}
+    <div class="cart-item">
+      <div class="item-details">
+        <h3>{{ item.nume }}</h3>
+        <p>
+          {% if lang == 'en' %}Option:
+          {% elif lang == 'th' %}ตัวเลือก:
+          {% else %}Opțiune:
+          {% endif %} {{ item.optiune }}
+        </p>
+      </div>
+
+      <!-- Zona nouă care conține prețul și butonul X -->
+      <div class="item-actions">
+        <div class="item-price">{{ item.pret }} THB</div>
+        <!-- Link-ul trimite către server indexul produsului din listă pentru a fi șters -->
+        <a href="/sterge_produs/{{ loop.index0 }}" class="remove-btn" title="Șterge produsul">&times;</a>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="total-section">
+      <strong>{{ texte.total if texte else 'Total' }}: {{ total }} THB</strong>
+    </div>
+
+    <a href="/checkout" class="checkout-btn">{{ texte.finalizeaza if texte else 'Finalizează Comanda' }}</a>
+  {% else %}
+    <p style="text-align: center;">
+      {% if lang == 'en' %}Your cart is currently empty.
+      {% elif lang == 'th' %}ตะกร้าของคุณว่างเปล่าในขณะนี้
+      {% else %}Coșul tău este gol momentan.
+      {% endif %}
+    </p>
+  {% endif %}
+
+  <a href="/" class="back-link">
+    {% if lang == 'en' %}← Continue shopping
+    {% elif lang == 'th' %}← เลือกซื้อสินค้าต่อ
+    {% else %}← Continuă cumpărăturile
+    {% endif %}
+  </a>
+
+</body>
+</html>

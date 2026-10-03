@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ texte.finalizeaza if texte else 'Finalizare Comandă' }} - Phunket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      padding: 40px 20px;
+      margin: 0;
+    }
+
+    /* --- GLOB INTERACTIV PENTRU LIMBĂ --- */
+    .lang-switcher {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .globe-icon {
+      font-size: 1.8rem;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      perspective: 1000px;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+    }
+
+    .globe-emoji {
+      display: inline-block;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .lang-switcher:hover .globe-emoji {
+      transform: rotateY(-360deg);
+    }
+
+    .lang-switcher:hover .globe-icon {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      transform: translateY(-2px);
+    }
+
+    .lang-dropdown {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+      width: 160px;
+    }
+
+    .lang-switcher:hover .lang-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .lang-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 800;
+      font-size: 0.95rem;
+      transition: background 0.2s ease;
+    }
+
+    .lang-dropdown a:hover {
+      background: #f4f4f4;
+    }
+
+    /* --- FORMULAR CHECKOUT --- */
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #666;
+      text-decoration: none;
+      font-weight: 800;
+      transition: color 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: #000;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 800;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: 800;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"], input[type="tel"], textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .radio-group {
+      margin-bottom: 25px;
+    }
+
+    .radio-group label {
+      font-weight: 400;
+      margin-right: 15px;
+      cursor: pointer;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: #000;
+      color: white;
+      padding: 15px;
+      border: none;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .submit-btn:hover {
+      background: #333;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Selector Limbi -->
+  <div class="lang-switcher">
+    <div class="globe-icon"><span class="globe-emoji">🌐</span></div>
+    <div class="lang-dropdown">
+      <a href="/set_lang/ro"><span>🇷🇴</span> Română</a>
+      <a href="/set_lang/en"><span>🇬🇧</span> English</a>
+      <a href="/set_lang/th"><span>🇹🇭</span> ไทย</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <a href="/cart" class="back-btn">
+      {% if lang == 'en' %}← Back to Cart
+      {% elif lang == 'th' %}← กลับไปยังตะกร้า
+      {% else %}← Înapoi la coș
+      {% endif %}
+    </a>
+
+    <h1>
+      {% if lang == 'en' %}Delivery Details
+      {% elif lang == 'th' %}รายละเอียดการจัดส่ง
+      {% else %}Detalii Livrare
+      {% endif %}
+    </h1>
+
+    <form action="/checkout" method="POST">
+
+      <div class="form-group">
+        <label>{{ texte.nume if texte else 'Nume complet' }}</label>
+        <input type="text" name="nume" required>
+      </div>
+
+      <div class="form-group">
+        <label>{{ texte.telefon if texte else 'Număr de telefon' }}</label>
+        <input type="tel" name="telefon" required>
+      </div>
+
+      <div class="form-group">
+        <label>{{ texte.adresa if texte else 'Adresa de livrare' }}</label>
+        <textarea name="adresa" required></textarea>
+      </div>
+
+      <div class="radio-group">
+        <label style="font-weight: 800; display: block; margin-bottom: 10px;">{{ texte.plata if texte else 'Metoda de plată' }}:</label>
+        <label><input type="radio" name="plata" value="Cash" checked> {{ texte.cash if texte else 'Numerar la livrare (Cash)' }}</label><br><br>
+        <label><input type="radio" name="plata" value="Card"> {{ texte.card if texte else 'Card bancar online' }}</label>
+      </div>
+
+      <button type="submit" class="submit-btn">{{ texte.trimite if texte else 'Trimite Comanda' }}</button>
+    </form>
+  </div>
+
+</body>
+</html>
