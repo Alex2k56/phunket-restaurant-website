@@ -18,7 +18,12 @@ A sleek, fully responsive, and performance-optimized front-end website created f
 - **⚡ Fast Performance & Smooth Scrolling:** Optimized assets, semantic markup, and zero unnecessary external heavy dependencies.
 - **🎨 Modern UI/UX Architecture:** Clean layout, elegant color palette, custom micro-interactions, and accessible navigation.
 
----
+<img width="1903" height="906" alt="Captură de ecran 2026-10-17 162153" src="https://github.com/user-attachments/assets/3a0693b9-a10a-4977-882d-e6b9e0972cad" />
+<img width="1892" height="905" alt="Captură de ecran 2026-10-17 162130" src="https://github.com/user-attachments/assets/af364eb6-239f-4bff-818d-ec261a524bc9" />
+<img width="1903" height="900" alt="Captură de ecran 2026-10-17 162113" src="https://github.com/user-attachments/assets/4c82d5b7-411e-4866-ace7-e45b1d7e3d06" />
+<img width="1875" height="907" alt="Captură de ecran 2026-10-17 162021" src="https://github.com/user-attachments/assets/5ca14992-9020-40d5-abcc-9efa21a95a2c" />
+<img width="1877" height="904" alt="Captură de ecran 2026-10-17 161932" src="https://github.com/user-attachments/assets/f32af53a-801f-4b1b-b1d4-b71d11e08c8b" />
+
 
 ## 🛠️ Tech Stack & Methods
 
